@@ -1,12 +1,14 @@
 import { Module } from "@nestjs/common";
 
-import CacheController from "./controller";
+import ConfigController from "./model/config.controller";
+import ServiceController from "./model/service.controller";
 
 @Module({
     imports: [
     ],
     controllers: [
-        CacheController
+        ConfigController,
+        ServiceController
     ],
     providers: [
     ],
