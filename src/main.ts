@@ -11,7 +11,6 @@ import { TCP_PORT, HTTP_PORT } from "./const"
 
 async function bootstrap () {
 
-    // this._setDefaultNode()
     const ips = getLocalNetworkIPs()
     console.log("\n---- ---- ----")
     console.log(ips)
