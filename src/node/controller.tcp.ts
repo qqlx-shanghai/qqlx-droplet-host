@@ -2,13 +2,14 @@ import fs from 'fs'
 import path from 'path'
 
 import { Controller, Query, Body, Get, Patch } from "@nestjs/common";
+import { EventPattern, MessagePattern } from "@nestjs/microservices";
 
 import type { PondNode, NodeServiceName, getPondNodeServiceDto, getPondNodeServiceRes, patchPondNodeServiceDto, patchPondNodeServiceRes } from "qqlx-core";
 import { POND_NODE_SERVICE_PATH, SHANGHAI_PG_SERVICE_NAME } from "qqlx-core";
 import { toNumber, toString, ToResponse } from "qqlx-cdk";
 import { } from "qqlx-sdk";
 
-@Controller()
+@Controller(POND_NODE_SERVICE_PATH)
 export default class {
     service_cache = new Map<string, PondNode>()
 
@@ -24,10 +25,10 @@ export default class {
         })
     }
 
-    @Get(POND_NODE_SERVICE_PATH)
+    @MessagePattern("/get")
     @ToResponse()
-    async get (@Query() query: getPondNodeServiceDto): Promise<getPondNodeServiceRes> {
-        const keyword = query.keyword
+    async get (dto: getPondNodeServiceDto): Promise<getPondNodeServiceRes> {
+        const keyword = dto.keyword
 
         return {
             key: keyword,
@@ -35,17 +36,17 @@ export default class {
         }
     }
 
-    @Patch(POND_NODE_SERVICE_PATH)
+    @MessagePattern("/patch")
     @ToResponse()
-    async patch (@Body() body: patchPondNodeServiceDto): Promise<patchPondNodeServiceRes> {
+    async patch (dto: patchPondNodeServiceDto): Promise<patchPondNodeServiceRes> {
 
-        const name: NodeServiceName = toString(body.key)
+        const name: NodeServiceName = toString(dto.key)
         if (name) {
             const node: PondNode = {
                 name: name,
-                lan_ip: toString(body.node.lan_ip),
-                port: toNumber(body.node.port),
-                text: toString(body.node.text)
+                lan_ip: toString(dto.node.lan_ip),
+                port: toNumber(dto.node.port),
+                text: toString(dto.node.text)
             }
             this.service_cache.set(name, node)
         }

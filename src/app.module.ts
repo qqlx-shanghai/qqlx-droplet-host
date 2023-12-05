@@ -1,14 +1,14 @@
 import { Module } from "@nestjs/common";
 
-import ConfigController from "./model/config.controller";
-import ServiceController from "./model/service.controller";
+import ConfigRestController from "./config/controller.rest";
+import NodeTcpController from "./node/controller.tcp";
 
 @Module({
     imports: [
     ],
     controllers: [
-        ConfigController,
-        ServiceController
+        // ConfigRestController,
+        NodeTcpController
     ],
     providers: [
     ],

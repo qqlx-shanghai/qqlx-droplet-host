@@ -6,26 +6,29 @@ import { toNumber, toString, toBoolean } from "qqlx-cdk";
 import { getLocalNetworkIPs } from "qqlx-sdk"
 
 import { AppModule } from "./app.module";
-import { TCP_PORT, HTTP_PORT } from "./const"
-
 
 async function bootstrap () {
 
-    const ips = getLocalNetworkIPs()
     console.log("\n---- ---- ----")
+    const ips = getLocalNetworkIPs()
     console.log(ips)
-    console.log(`pond_node http port is: ${HTTP_PORT}`)
-    console.log("---- ---- ---- \n")
 
-    // 创建基于 TCP 协议的微服务
-    // const microservice = await NestFactory.createMicroservice<MicroserviceOptions>(AppModule, {
-    //     transport: Transport.TCP,
-    //     options: { host: "0.0.0.0", port: TCP_PORT },
-    // });
-    // await microservice.listen();
+    const TCP_PORT = 1001
+    const HTTP_PORT = 2001
 
-    // 启动 RESTful API
+    // 对内的微服务
+    const microservice = await NestFactory.createMicroservice<MicroserviceOptions>(AppModule, {
+        transport: Transport.TCP,
+        options: { host: "0.0.0.0", port: TCP_PORT },
+    });
+    await microservice.listen();
+    console.log(`qqlx-pond-node tcp is: ${TCP_PORT}`)
+
+    // 对外的 RESTful API
     const app = await NestFactory.create(AppModule);
     await app.listen(HTTP_PORT);
+
+    console.log(`qqlx-pond-node http is: ${HTTP_PORT}`)
+    console.log("---- ---- ---- \n")
 }
 bootstrap();

@@ -5,14 +5,14 @@ import { POND_NODE_CONFIG_PATH, SHANGHAI_PG_SERVICE_NAME } from "qqlx-core";
 import { toNumber, toString, ToResponse } from "qqlx-cdk";
 import { } from "qqlx-sdk";
 
-@Controller()
+@Controller(POND_NODE_CONFIG_PATH)
 export default class {
     config_cache = new Map<string, JSONStr>()
 
     constructor() {
     }
 
-    @Get(POND_NODE_CONFIG_PATH)
+    @Get()
     @ToResponse()
     async get (@Query() query: getPondNodeConfigDto): Promise<getPondNodeConfigRes> {
         const keyword = query.keyword
@@ -23,7 +23,7 @@ export default class {
         }
     }
 
-    @Patch(POND_NODE_CONFIG_PATH)
+    @Patch()
     @ToResponse()
     async patch (@Body() body: patchPondNodeConfigDto): Promise<patchPondNodeConfigRes> {
         this.config_cache.set(body.key, body.value)
