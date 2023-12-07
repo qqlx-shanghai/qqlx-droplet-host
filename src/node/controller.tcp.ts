@@ -4,20 +4,20 @@ import path from 'path'
 import { Controller, Query, Body, Get, Patch } from "@nestjs/common";
 import { EventPattern, MessagePattern } from "@nestjs/microservices";
 
-import type { PondNode, NodeServiceName, getPondNodeServiceDto, getPondNodeServiceRes, patchPondNodeServiceDto, patchPondNodeServiceRes } from "qqlx-core";
-import { POND_NODE_SERVICE_PATH, SHANGHAI_PG_SERVICE_NAME } from "qqlx-core";
+import type { PondDropet, getPondDropetDto, getPondDropetRes, patchPondDropetDto, patchPondDropetRes } from "qqlx-core";
+import { POND_DROPET_PATH, SHANGHAI_POSTGRESQL_DROPET } from "qqlx-core";
 import { toNumber, toString, ToResponse } from "qqlx-cdk";
 import { } from "qqlx-sdk";
 
-@Controller(POND_NODE_SERVICE_PATH)
+@Controller()
 export default class {
-    service_cache = new Map<string, PondNode>()
+    service_cache = new Map<string, PondDropet>()
 
     constructor() {
         const config_file = fs.readFileSync(path.join(process.cwd(), "../qqlx-config.json"), "utf-8")
         const config = JSON.parse(config_file)
 
-        this.service_cache.set(SHANGHAI_PG_SERVICE_NAME, {
+        this.service_cache.set(SHANGHAI_POSTGRESQL_DROPET, {
             name: config.db_name,
             lan_ip: config.db_host,
             port: config.db_port,
@@ -25,30 +25,30 @@ export default class {
         })
     }
 
-    @MessagePattern("/get")
+    @MessagePattern(`${POND_DROPET_PATH}/get`)
     @ToResponse()
-    async get (dto: getPondNodeServiceDto): Promise<getPondNodeServiceRes> {
-        const keyword = dto.keyword
+    async get (dto: getPondDropetDto): Promise<getPondDropetRes> {
+        const name = dto.name
 
         return {
-            key: keyword,
-            node: this.service_cache.get(keyword)
+            name: name,
+            dropet: this.service_cache.get(name)
         }
     }
 
-    @MessagePattern("/patch")
+    @MessagePattern(`${POND_DROPET_PATH}/patch`)
     @ToResponse()
-    async patch (dto: patchPondNodeServiceDto): Promise<patchPondNodeServiceRes> {
+    async patch (dto: patchPondDropetDto): Promise<patchPondDropetRes> {
 
-        const name: NodeServiceName = toString(dto.key)
+        const name = toString(dto.name)
         if (name) {
-            const node: PondNode = {
+            const dropet: PondDropet = {
                 name: name,
-                lan_ip: toString(dto.node.lan_ip),
-                port: toNumber(dto.node.port),
-                text: toString(dto.node.text)
+                lan_ip: toString(dto.dropet.lan_ip),
+                port: toNumber(dto.dropet.port),
+                text: toString(dto.dropet.text)
             }
-            this.service_cache.set(name, node)
+            this.service_cache.set(name, dropet)
         }
 
         return null

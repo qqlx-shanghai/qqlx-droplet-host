@@ -1,6 +1,6 @@
 import { Module } from "@nestjs/common";
 
-import ConfigRestController from "./config/controller.rest";
+// import ConfigRestController from "./config/controller.rest";
 import NodeTcpController from "./node/controller.tcp";
 
 @Module({
