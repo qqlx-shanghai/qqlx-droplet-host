@@ -43,7 +43,7 @@ export default class {
         const name = toString(dto.name)
         if (name) {
             const dropet: PondDropet = {
-                name: name,
+                name: toString(dto.dropet.name),
                 lan_ip: toString(dto.dropet.lan_ip),
                 port: toNumber(dto.dropet.port),
                 text: toString(dto.dropet.text)
