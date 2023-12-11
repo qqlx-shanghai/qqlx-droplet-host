@@ -22,13 +22,13 @@ async function bootstrap () {
         options: { host: "0.0.0.0", port: TCP_PORT },
     });
     await microservice.listen();
-    console.log(`qqlx-pond-dropet tcp is: ${TCP_PORT}`)
+    console.log(`qqlx-pond-droplet tcp is: ${TCP_PORT}`)
 
     // 对外的 RESTful API
     const app = await NestFactory.create(AppModule);
     await app.listen(HTTP_PORT);
 
-    console.log(`qqlx-pond-dropet http is: ${HTTP_PORT}`)
+    console.log(`qqlx-pond-droplet http is: ${HTTP_PORT}`)
     console.log("---- ---- ---- \n")
 }
 bootstrap();
