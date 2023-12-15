@@ -5,30 +5,29 @@ import { } from "qqlx-core";
 import { toNumber, toString, toBoolean } from "qqlx-cdk";
 import { getLocalNetworkIPs } from "qqlx-sdk"
 
-import { AppModule } from "./app.module";
+import { TcpModule } from "./tcp.module";
 
 async function bootstrap () {
-
-    console.log("\n---- ---- ----")
-    const ips = getLocalNetworkIPs()
-    console.log(ips)
 
     const TCP_PORT = 1001
     const HTTP_PORT = 2001
 
     // 对内的微服务
-    const microservice = await NestFactory.createMicroservice<MicroserviceOptions>(AppModule, {
+    const microservice = await NestFactory.createMicroservice<MicroserviceOptions>(TcpModule, {
         transport: Transport.TCP,
         options: { host: "0.0.0.0", port: TCP_PORT },
     });
     await microservice.listen();
-    console.log(`qqlx-pond-droplet tcp is: ${TCP_PORT}`)
 
     // 对外的 RESTful API
-    const app = await NestFactory.create(AppModule);
-    await app.listen(HTTP_PORT);
+    // const app = await NestFactory.create(AppModule);
+    // await app.listen(HTTP_PORT);
 
-    console.log(`qqlx-pond-droplet http is: ${HTTP_PORT}`)
-    console.log("---- ---- ---- \n")
+    console.log("\n---- ---- ---- main.ts");
+    const ips = getLocalNetworkIPs()
+    for (const ip of ips) console.log(`qqlx-pond-droplet:ip: ${Object.values(ip).reverse().join(".")}`);
+    console.log(`qqlx-pond-droplet:tcp: ${TCP_PORT}`);
+    console.log(`qqlx-pond-droplet:http: ${HTTP_PORT}`);
+    console.log("---- ---- ---- \nrunning success!");
 }
 bootstrap();

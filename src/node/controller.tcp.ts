@@ -45,11 +45,10 @@ export default class {
     @ToResponse()
     async get (dto: getPondDropletDto): Promise<getPondDropletRes> {
         const name = dto.name
+        const droplet = this._cache.get(name)
+        if (!droplet) throw new Error(`pond-droplet: can not find droplet by ${name}`)
 
-        return {
-            name: name,
-            droplet: this._cache.get(name)
-        }
+        return { name, droplet }
     }
 
     @MessagePattern(`${PATH_POND_DROPLET}/patch`)
