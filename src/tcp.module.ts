@@ -1,14 +1,10 @@
 import { Module } from "@nestjs/common";
 
-import NodeTcpController from "./node/controller.tcp";
+import NodeTcpController from "./location/controller.tcp";
 
 @Module({
-    imports: [
-    ],
-    providers: [
-    ],
-    controllers: [
-        NodeTcpController
-    ],
+    imports: [],
+    providers: [],
+    controllers: [NodeTcpController],
 })
-export class TcpModule { }
+export class TcpModule {}
