@@ -2,10 +2,10 @@ import { NestFactory } from "@nestjs/core";
 import { MicroserviceOptions, Transport } from "@nestjs/microservices";
 
 import {} from "qqlx-core";
-import { toNumber, toString, toBoolean } from "qqlx-cdk";
+import {} from "qqlx-cdk";
 import { getLocalNetworkIPs } from "qqlx-sdk";
 
-import { TcpModule } from "./tcp.module";
+import { TcpModule } from "./tcp/module";
 
 async function bootstrap() {
     const TCP_PORT = 1001;
@@ -18,10 +18,7 @@ async function bootstrap() {
     });
     await microservice.listen();
 
-    // 对外的 RESTful API
-    // const app = await NestFactory.create(AppModule);
-    // await app.listen(HTTP_PORT);
-
+    // System tips
     console.log("\n---- ---- ---- main.ts");
     const ips = getLocalNetworkIPs();
     for (const ip of ips) console.log(`qqlx-droplet-location:ip: ${Object.values(ip).reverse().join(".")}`);

@@ -1,6 +1,6 @@
 import { Module } from "@nestjs/common";
 
-import NodeTcpController from "./location/controller.tcp";
+import NodeTcpController from "./location.controller";
 
 @Module({
     imports: [],
