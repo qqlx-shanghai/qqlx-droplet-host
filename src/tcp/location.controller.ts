@@ -4,14 +4,14 @@ import path from "path";
 import { Controller, Query, Body, Get, Patch } from "@nestjs/common";
 import { EventPattern, MessagePattern } from "@nestjs/microservices";
 
-import type { DropletLocation, getDropletLocationDto, getDropletLocationRes, patchDropletLocationDto, patchDropletLocationRes } from "qqlx-core";
-import { PATH_DROPLET_LOCATION, SHANGHAI_POSTGRESQL_DROPLET } from "qqlx-core";
+import type { DropletHost, getDropletHostDto, getDropletHostRes, patchDropletHostDto, patchDropletHostRes } from "qqlx-core";
+import { PATH_DROPLET_HOST, SHANGHAI_POSTGRESQL_DROPLET } from "qqlx-core";
 import { toNumber, toString, ToResponse, isValid } from "qqlx-cdk";
-import {} from "qqlx-sdk";
+import { } from "qqlx-sdk";
 
 @Controller()
 export default class {
-    private _cache = new Map<string, DropletLocation>();
+    private _cache = new Map<string, DropletHost>();
 
     constructor() {
         const config_file = fs.readFileSync(path.join(process.cwd(), "../qqlx-config.json"), "utf-8");
@@ -39,24 +39,24 @@ export default class {
         }
     }
 
-    @MessagePattern(`${PATH_DROPLET_LOCATION}/get`)
+    @MessagePattern(`${PATH_DROPLET_HOST}/get`)
     @ToResponse()
-    async get(dto: getDropletLocationDto): Promise<getDropletLocationRes> {
+    async get (dto: getDropletHostDto): Promise<getDropletHostRes> {
         const key = dto.key;
         const droplet = this._cache.get(key);
         if (!droplet) throw new Error(`droplet-location: can not find droplet by ${key}`);
 
-        return { droplet };
+        return droplet;
     }
 
-    @MessagePattern(`${PATH_DROPLET_LOCATION}/patch`)
+    @MessagePattern(`${PATH_DROPLET_HOST}/patch`)
     @ToResponse()
-    async patch(dto: patchDropletLocationDto): Promise<patchDropletLocationRes> {
+    async patch (dto: patchDropletHostDto): Promise<patchDropletHostRes> {
         if (dto.key) {
-            const droplet: DropletLocation = {
-                lan_ip: toString(dto.droplet.lan_ip),
-                port: toNumber(dto.droplet.port),
-                remark: toString(dto.droplet.remark),
+            const droplet: DropletHost = {
+                lan_ip: toString(dto.schema.lan_ip),
+                port: toNumber(dto.schema.port),
+                remark: toString(dto.schema.remark),
             };
             this._cache.set(dto.key, droplet);
         }
