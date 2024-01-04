@@ -4,7 +4,7 @@ import path from "path";
 import { Controller, Query, Body, Get, Patch } from "@nestjs/common";
 import { EventPattern, MessagePattern } from "@nestjs/microservices";
 
-import type { DropletHost, getDropletHostDto, getDropletHostRes, patchDropletHostDto, patchDropletHostRes } from "qqlx-core";
+import type { DropletHost, getDropletHostDto, getDropletHostRes, putDropletHostDto, putDropletHostRes } from "qqlx-core";
 import { PATH_DROPLET_HOST, SHANGHAI_POSTGRESQL_DROPLET } from "qqlx-core";
 import { toNumber, toString, ToResponse, isValid } from "qqlx-cdk";
 import { } from "qqlx-sdk";
@@ -29,13 +29,13 @@ export default class {
             if (/db_/.test(key)) continue;
 
             const value = toString(config[key]);
-            if (isValid(key) && isValid(value)) {
-                this._cache.set(key, {
-                    lan_ip: "",
-                    port: -1,
-                    remark: value,
-                });
-            }
+            const beingValid = (isValid(key) && isValid(value))
+            if (!beingValid) continue
+            this._cache.set(key, {
+                lan_ip: "",
+                port: -1,
+                remark: value,
+            });
         }
     }
 
@@ -44,14 +44,14 @@ export default class {
     async get (dto: getDropletHostDto): Promise<getDropletHostRes> {
         const key = dto.key;
         const droplet = this._cache.get(key);
-        if (!droplet) throw new Error(`droplet-location: can not find droplet by ${key}`);
+        if (!droplet) throw new Error(`droplet-host（404）${key}`);
 
         return droplet;
     }
 
-    @MessagePattern(`${PATH_DROPLET_HOST}/patch`)
+    @MessagePattern(`${PATH_DROPLET_HOST}/put`)
     @ToResponse()
-    async patch (dto: patchDropletHostDto): Promise<patchDropletHostRes> {
+    async put (dto: putDropletHostDto): Promise<putDropletHostRes> {
         if (dto.key) {
             const droplet: DropletHost = {
                 lan_ip: toString(dto.schema.lan_ip),
