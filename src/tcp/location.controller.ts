@@ -5,7 +5,7 @@ import { Controller, Query, Body, Get, Patch } from "@nestjs/common";
 import { EventPattern, MessagePattern } from "@nestjs/microservices";
 
 import type { DropletHost, getDropletHostDto, getDropletHostRes, putDropletHostDto, putDropletHostRes } from "qqlx-core";
-import { PATH_DROPLET_HOST, SHANGHAI_POSTGRESQL_DROPLET } from "qqlx-core";
+import { PATH_DROPLET_HOST, DROPLET_SHANGHAI_POSTGRESQL } from "qqlx-core";
 import { toNumber, toString, ToResponse, isValid } from "qqlx-cdk";
 import { } from "qqlx-sdk";
 
@@ -18,7 +18,7 @@ export default class {
         const config = JSON.parse(config_file);
 
         // 服务配置
-        this._cache.set(SHANGHAI_POSTGRESQL_DROPLET, {
+        this._cache.set(DROPLET_SHANGHAI_POSTGRESQL, {
             lan_ip: config.db_host,
             port: config.db_port,
             remark: `${config.db_name};${config.db_username};${config.db_passwd}`,
